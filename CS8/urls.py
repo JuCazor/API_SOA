@@ -21,11 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^', include(router.urls)),
     re_path(r'^soa/login', include('Login.urls')),
-    re_path(r'^soa/tienda', include('example.urls')),
-
-    #re_path(r'^api/v1/estudiantes/', include('example.urls')),
-    #re_path(r'^api/v1/grupos/', include('example.urls')),
-    #re_path(r'^api/v1/materias/', include('example.urls')),
-    #re_path(r'^api/v1/profesores/', include('example.urls')),
-    # path(r'^api-auth/', include('rest_framework.urls'))
+    re_path(r'^soa/store/', include('example.urls')),
 ]
