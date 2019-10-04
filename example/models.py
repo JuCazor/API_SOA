@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -6,15 +7,6 @@ class Example(models.Model):
     
     class Meta:
         db_table = "Example"
-
-class User(models.Model):
-    username = models.CharField(max_length=30, null=False)
-    email = models.CharField(max_length=50, null=False)
-    rol = models.IntegerField( null=False )
-    status = models.IntegerField(null=False)
-
-    class Meta:
-        db_table = "users"
 
 
 #modelo extra

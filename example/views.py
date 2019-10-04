@@ -12,11 +12,6 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 
 
-
-
-
-
-from example.models import User
 from example.models import Product
 
 from example.models import Transaction

@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES':('rest_framework.permissions.IsAuthenticated',),
+    #'DEFAULT_PERMISSION_CLASSES':('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES':('rest_framework.authentication.TokenAuthentication',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'CS8.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+   'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'd9gt8l47k9v4jv',
         'USER': 'xjpuudnjdhvopa',
@@ -107,7 +107,22 @@ DATABASES = {
     }
 }
 
-#chale 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'apisoapwa',
+#         'USER': 'postgres',
+#         'PASSWORD': '1234',
+#         'HOST':'localhost',
+#         'PORT':'5432'
+#     }
+# }
+
+#{
+#    "token": "6bd20a100f47041e552a52f204845327607e50ec",
+#    "user_id": 1,
+#    "username": "admin"
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

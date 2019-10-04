@@ -1,6 +1,7 @@
 from rest_framework import routers, serializers
+from django.contrib.auth.models import User
 
-from example.models import User
+
 from example.models import Product
 
 from example.models import Inventory
