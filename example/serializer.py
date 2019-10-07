@@ -32,8 +32,7 @@ class ProductidSerializer(serializers.ModelSerializer):
         fields = ('id')
 
 class InventorySerializer(serializers.ModelSerializer):
-    usuarioI = UseridSerializer(many=True)
-    productoI = ProductidSerializer(many=True)
+    
     class Meta:
         model = Inventory
         fields = ('__all__')
@@ -44,14 +43,13 @@ class InventoryidSerializer(serializers.ModelSerializer):
         fields = ('id')
 
 class TransactionSerializer(serializers.ModelSerializer):
-    inventario = InventoryidSerializer(many=True)
+    
     class Meta:
         model = Transaction
         fields = ('__all__')
 
 class SaleSerializer(serializers.ModelSerializer):
-    usuarioI = UseridSerializer(many=True)
-    productoI = ProductidSerializer(many=True)
+    
     class Meta:
         model = Sale
         fields = ('__all__')

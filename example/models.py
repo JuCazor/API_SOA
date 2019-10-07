@@ -22,17 +22,17 @@ class Product(models.Model):
         db_table = "products"
 
 class Inventory(models.Model):
-    product_id= models.ForeignKey(Product, on_delete=models.SET(-1), related_name='productoI')
+    product_id= models.ForeignKey(Product, on_delete=models.SET(-1))
     quantity = models.IntegerField(null=False)
     price = models.FloatField(null=False)
-    user_id = models.ForeignKey(User, on_delete=models.SET(-1), related_name='usuarioI')
+    user_id = models.ForeignKey(User, on_delete=models.SET(-1))
     tax = models.FloatField(null=False)
 
     class Meta:
         db_table = "inventories"
 
 class Transaction(models.Model):
-    inventory_id = models.ForeignKey(Inventory, on_delete=models.SET(-1), related_name='inventario')
+    inventory_id = models.ForeignKey(Inventory, on_delete=models.SET(-1))
     date = models.DateField(null=False)
     typee = models.IntegerField(null=False)
 
@@ -40,8 +40,8 @@ class Transaction(models.Model):
         db_table = "transactions"
 
 class Sale(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.SET(-1), related_name='productS')
-    user_id = models.ForeignKey(User, on_delete=models.SET(-1), related_name='userSe')
+    product_id = models.ForeignKey(Product, on_delete=models.SET(-1))
+    user_id = models.ForeignKey(User, on_delete=models.SET(-1))
     quantity = models.IntegerField(null=False)
     discount = models.FloatField(null=False )
     total = models.FloatField(null=False)
