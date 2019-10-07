@@ -133,7 +133,7 @@ class InventoriesList(APIView):
     
     def get(self, request, format=None):
         queryset = Inventory.objects.all()
-        serializer = InventoriesList(queryset, many=True)
+        serializer = InventorySerializer(queryset, many=True)
         return Response(serializer.data)
     
     def post(self, request, format=None):
