@@ -47,7 +47,7 @@ class Sale(models.Model):
     total = models.FloatField(null=False)
     date = models.FloatField(null=False)
     status = models.IntegerField(null=False)
-    paymaneth_method=models.IntegerField(null=False)
+    payment_method=models.IntegerField(null=False)
 
     class Meta:
         db_table = "sales"
