@@ -11,12 +11,18 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
+
+
+#IsAuthenticated
+
+
 from example.models import Product
 
 from example.models import Transaction
 from example.models import Sale
 
 from example.models import Inventory
+
 
 from example.serializer import UserSerializer
 from example.serializer import ProductSerializer
@@ -129,7 +135,6 @@ class UsersList(APIView):
         if serializer.is_valid():
             user = User.objects.create_user(request.data)
             user.save()
-            #serializer.save()
             datas = serializer.data
             return Response(datas)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
@@ -284,7 +289,7 @@ class SalesList(APIView):
                 total = request.data['total'],
                 date = request.data['date'],
                 status = request.data['status'],
-                paymaneth_method = request.data['paymaneth_method'],
+                payment_method = request.data['payment_method'],
                 product_id = Product.objects.get(pk = id),
                 user_id = User.objects.get(pk=request.data['user_id'])
             )
