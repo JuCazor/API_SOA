@@ -22,4 +22,6 @@ urlpatterns = [
 
      re_path(r'^sales_list/$', views.SalesList.as_view() ),
      re_path(r'^sale_detail/(?P<id>\d+)$', views.SaleDetail.as_view() ),
+
+     re_path(r'^cancel_sale/(?P<id>\d+)$', views.CancelSale.as_view() ),
 ]

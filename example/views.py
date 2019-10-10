@@ -11,14 +11,12 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
-
 from example.models import Product
 
 from example.models import Transaction
 from example.models import Sale
 
-from example.serializer import Inventory
-
+from example.models import Inventory
 
 from example.serializer import UserSerializer
 from example.serializer import ProductSerializer
@@ -28,21 +26,50 @@ from example.serializer import InventorySerializer
 from example.serializer import InventoryidSerializer
 from example.serializer import TransactionSerializer
 from example.serializer import SaleSerializer
-#vistas de extra
+
+
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+
 class ProductsList(APIView):
     
     def get(self, request, format=None):
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(status = 1)
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
     
     def post(self, request, format=None):
-        serializer = ProductSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            datas = serializer.data
-            return Response(datas)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        postProduct = Product.objects.create(
+            code = request.data['code'],
+            name = request.data['name'],
+            description = request.data['description'],
+            image = request.data['image'],
+            status = request.data['status']
+        )
+        postProduct.save()
+        id = request.data['user_id']
+        postInventario = Inventory.objects.create(
+            quantity = request.data['quantity'],
+            price = request.data['price'],
+            tax = request.data['tax'],
+            product_id = postProduct,
+            user_id = User.objects.get(pk=id)
+        )
+        postTransaction = Transaction.objects.create(
+            date = request.data['date'],
+            typee = 1,
+            inventory_id = postInventario
+        )
+        postTransaction.save()
+        postInventario.save()
+        return Response(postInventario.id)
+
+class ProductListAll(APIView):
+    def get(self, request, format=None):
+        queryset = Product.objects.all()
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ProductDetail(APIView):
@@ -77,7 +104,18 @@ class ProductDetail(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class CancelSale(APIView):
+    def put(self, request, id, format=None):
+        example = self.get_object(id)
+        if example != False:
+            venta = Sale.objects.get(pk=id)
+            venta.status = 0
+            venta.save()
+            inventario = Inventory.objects.get(product_id = venta.product_id)
+            inventario.quantity = inventario.quantity + venta.quantity
+            inventario.save()
+            return Response('Guardado')
 
 class UsersList(APIView):
     
@@ -89,7 +127,9 @@ class UsersList(APIView):
     def post(self, request, format=None):
         serializer = UserSerializer(data = request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = User.objects.create_user(request.data)
+            user.save()
+            #serializer.save()
             datas = serializer.data
             return Response(datas)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
@@ -126,8 +166,6 @@ class UserDetail(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-#////////////////////////////////////////////////////////////////////////////////////////////////
 
 class InventoriesList(APIView):
     
@@ -177,8 +215,6 @@ class InventoriesDetail(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-#//////////////////////////////////////////////////////////////////////////////////////////////
-
 class TransactionsList(APIView):
     
     def get(self, request, format=None):
@@ -227,8 +263,6 @@ class TransactionDetail(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-#////////////////////////////////////////////////////////////////////////////////////
-
 class SalesList(APIView):
     
     def get(self, request, format=None):
@@ -237,13 +271,34 @@ class SalesList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
-        serializer = SaleSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            datas = serializer.data
-            return Response(datas)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-
+        id = request.data['product_id']
+        inventario = Inventory.objects.get(product_id = id)
+        cantidad = request.data['quantity']
+        cantidadD = inventario.quantity
+        print(cantidad)
+        print(cantidadD)
+        if int(cantidadD) - int(cantidad) >= 0:
+            venta = Sale.objects.create(
+                quantity = cantidad,
+                discount = request.data['discount'],
+                total = request.data['total'],
+                date = request.data['date'],
+                status = request.data['status'],
+                paymaneth_method = request.data['paymaneth_method'],
+                product_id = Product.objects.get(pk = id),
+                user_id = User.objects.get(pk=request.data['user_id'])
+            )
+            inventario.quantity = int(cantidadD) - int(cantidad)
+            inventario.save()
+            venta.save()
+            transaccion =Transaction.objects.create(
+                date = request.data['date'],
+                typee = 2,
+                inventory_id = inventario
+            ) 
+            transaccion.save()
+            return Response('exitoso')
+        return Response('error')
 
 class SaleDetail(APIView):
     def get_object(self, id):

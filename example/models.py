@@ -45,7 +45,7 @@ class Sale(models.Model):
     quantity = models.IntegerField(null=False)
     discount = models.FloatField(null=False )
     total = models.FloatField(null=False)
-    date = models.FloatField(null=False)
+    date = models.DateField(null=False)
     status = models.IntegerField(null=False)
     payment_method=models.IntegerField(null=False)
 
